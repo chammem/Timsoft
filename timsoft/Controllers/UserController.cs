@@ -6,7 +6,7 @@ using timsoft.Utils.SignInRequest;
 
 namespace timsoft.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {

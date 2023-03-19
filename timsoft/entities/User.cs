@@ -22,10 +22,16 @@ namespace timsoft.entities
 
         [NotMapped]
         [JsonIgnore]
+
         public Role? Roles { get; set; }
 
         [NotMapped]
         [JsonIgnore]
         public List<UserEpreuve> UserEpreuves { get; set; }
+
+
+        //public Guid IdClient { get; set; }
+        //[ForeignKey("IdClient")]
+        //public Client? Client { get; set; }
     }
 }

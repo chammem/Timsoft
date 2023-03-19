@@ -65,6 +65,7 @@ namespace timsoft.repositories
 
             itemToUpdate.Objet = réclamation.Objet;
             itemToUpdate.Description = réclamation.Description;
+         /*   _context.Réclamation.Update();*/
             _context.SaveChanges();
             return "Réclamation modifié";
         }

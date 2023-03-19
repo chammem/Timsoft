@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -25,10 +27,16 @@ builder.Services.AddSwaggerGen(options =>
 });
 // Add services to the container.
 
+
+
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<DataBaseContext>(
     o => o.UseNpgsql(builder.Configuration.GetConnectionString("Timsoft")));
+
+builder.Services.AddCors(o => o.AddPolicy(name: "SuperHeroOrigins",
+   policy => { policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader(); }));
+ 
 
 builder.Services.AddTransient<IQuestionRepository, QuestionRepository>();
 builder.Services.AddTransient<IQuestionService, QuestionService>();
@@ -70,9 +78,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(builder.Configuration.GetSection("Jwt:key").Value)),
-            ValidateIssuer = false,
-            ValidateAudience = false
+                   .GetBytes("superSecretKey@345")),
+           // builder.Configuration.GetSection("Jwt:key").Value
+            ValidateIssuer = true,
+            ValidateAudience = true ,
+            ValidateLifetime = true ,
+            ValidIssuer = "http://localhost:4200",
+            ValidAudience = "http://localhost:4200"
         };
     });
 
@@ -85,7 +97,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("SuperHeroOrigins");
 app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

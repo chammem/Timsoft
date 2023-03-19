@@ -5,7 +5,7 @@ using timsoft.services;
 
 namespace timsoft.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("Epreuve/")]
     [ApiController]
     public class EpreuveController : ControllerBase
 

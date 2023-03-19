@@ -62,48 +62,58 @@ namespace timsoft.Utils
 
         public string GenerateToken(SignIn signIn)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var user = _context.Users
-                    .Where(u => u.Username == signIn.UserName)
-                    .FirstOrDefault();
-            var roles = new List<String> { };
-            var userRoles = _context.Users
-                       .Where(u => u.Username == signIn.UserName)
-                       .Select(u => u.Roles);
-
-            if (userRoles.Count() > 0)
+            //var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            //var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            //var user = _context.Users
+            //        .Where(u => u.Username == signIn.UserName)
+            //        .FirstOrDefault();
+            var user = _context.Users.FirstOrDefault(X=>X.Username == signIn.UserName);
+            if (user != null)
             {
-                foreach (Role role in userRoles)
-                {
-                    roles.Add(role.RoleName);
-                }
-                // System.Diagnostics.Debug.WriteLine(roles);
+                var roles = _context.Roles.Find(user.Roles);
+              
+                 var rolename = roles.RoleName;
             }
+            
+                    
+            //var roles = new List<String> { };
+            //var userRoles = _context.Users
+            //           .Where(u => u.Username == signIn.UserName)
+            //           .Select(u => u.Roles);
 
-            var claims = new List<Claim>
-            {
-               new Claim(ClaimTypes.Name,user.Username)
-            };
+            //if (userRoles.Count() > 0)
+            //{
+            //    foreach (Role role in userRoles)
+            //    {
+            //        roles.Add(role.RoleName);
+            //    }
+            //    // System.Diagnostics.Debug.WriteLine(roles);
+            //}
+
+            //var claims = new List<Claim>
+            //{
+            //   new Claim(ClaimTypes.Name,user.Username)
+            //};
 
 
 
 
-            foreach (string role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
+            //foreach (string role in roles)
+            //{
+            //    claims.Add(new Claim(ClaimTypes.Role, role));
+            //}
 
 
 
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-                _config["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(1500),
-                signingCredentials: credentials);
+            //var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+            //    _config["Jwt:Audience"],
+            //   // claims,
+            //    expires: DateTime.Now.AddMinutes(1500),
+            //    signingCredentials: credentials);
 
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            //return new JwtSecurityTokenHandler().WriteToken(token);
+            return "token synda";
 
         }
     }
